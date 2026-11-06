@@ -163,11 +163,17 @@ function g(e, t) {
   ((m = e), (p = t ?? {}));
 }
 function _(e) {
-  let t = e.match(/^\/([a-z]{2}(?:-[a-z]{2})?)(\/|$)/)?.[1];
-  return t && t !== `en` && f(t) ? t : `en`;
+  // 子路径部署兼容：在任意路径段中识别语言码（如 GitHub Pages 的 /repo/zh/）
+  let t = e.split(`/`).find((s) => /^[a-z]{2}(?:-[a-z]{2})?$/.test(s) && f(s));
+  return t && t !== `en` ? t : `en`;
 }
 function v(e) {
-  return (e === `en` ? `/` : `/${e}/`) + location.search + location.hash;
+  // 子路径部署兼容：保留部署前缀（如 /learn-arduino-zh-src/）再拼接语言路径
+  let t = location.pathname.split(`/`).filter(Boolean);
+  let n = t.findIndex((s) => /^[a-z]{2}(?:-[a-z]{2})?$/.test(s) && f(s));
+  let r = n >= 0 ? `/` + t.slice(0, n).join(`/`) : location.pathname.replace(/[^/]*$/, ``);
+  r.endsWith(`/`) || (r += `/`);
+  return r + (e === `en` ? `` : `${e}/`) + location.search + location.hash;
 }
 function y() {
   try {
@@ -187,7 +193,7 @@ function b() {
 }
 async function x() {
   let t = _(location.pathname);
-  if (t === `en` && location.pathname === `/`) {
+  if (t === `en` && (location.pathname === `/` || /^\/[^/]+\/$/.test(location.pathname))) {
     let e = y() ?? b();
     if (e && e !== `en`) return (location.replace(v(e)), !1);
   }
