@@ -1,0 +1,19 @@
+{
+  "name": "learn-arduino-zh-src",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Learn Arduino 中文版 — 由构建产物还原的可读源码工程",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 8123",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "vite": "^7.1.11"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
